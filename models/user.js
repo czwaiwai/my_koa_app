@@ -1,8 +1,8 @@
-const { DataTypes } = require('sequelize');
-const bcrypt = require('bcryptjs');
+const { DataTypes } = require("sequelize");
+const bcrypt = require("bcryptjs");
 
 module.exports = (sequelize) => {
-  const User = sequelize.define('User', {
+  const User = sequelize.define("User", {
     username: {
       type: DataTypes.STRING,
       unique: true,
@@ -19,5 +19,40 @@ module.exports = (sequelize) => {
     user.password = await bcrypt.hash(user.password, 10);
   });
 
+  // 关联UserGameSettings
+  User.associate = (models) => {
+    User.hasMany(models.UserGameSettings, {
+      foreignKey: "userId",
+      as: "gameSettings",
+    });
+  };
+
   return User;
+};
+
+const UserGameSettings = sequelize.define(
+  "UserGameSettings",
+  {
+    game_type: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    settings: {
+      type: DataTypes.JSON,
+      allowNull: false,
+    },
+  },
+  {
+    indexes: [
+      {
+        unique: true,
+        fields: ["userId", "game_type"],
+      },
+    ],
+  }
+);
+
+// 关联User
+UserGameSettings.associate = (models) => {
+  UserGameSettings.belongsTo(models.User, { foreignKey: "userId", as: "user" });
 };
