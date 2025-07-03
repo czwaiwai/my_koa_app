@@ -12,6 +12,22 @@ module.exports = (sequelize) => {
       type: DataTypes.STRING,
       allowNull: false,
     },
+    nickname: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    balance: { // 剩余信用
+      type: DataTypes.FLOAT,
+      defaultValue: 0.0,
+    },
+    usedCredit: { // 已使用信用
+      type: DataTypes.FLOAT,
+      defaultValue: 0.0,
+    },
+    creditMax: { // 最大信用额度
+      type: DataTypes.FLOAT,
+      defaultValue: 1000.0,
+    },
   });
 
   // 密码加密
