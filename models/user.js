@@ -12,19 +12,27 @@ module.exports = (sequelize) => {
       type: DataTypes.STRING,
       allowNull: false,
     },
+    userType: {
+      type: DataTypes.ENUM("user", "manage", "admin"),
+      allowNull: false,
+      defaultValue: "user",
+    },
     nickname: {
       type: DataTypes.STRING,
       allowNull: true,
     },
-    balance: { // 剩余信用
+    balance: {
+      // 剩余信用
       type: DataTypes.FLOAT,
       defaultValue: 0.0,
     },
-    usedCredit: { // 已使用信用
+    usedCredit: {
+      // 已使用信用
       type: DataTypes.FLOAT,
       defaultValue: 0.0,
     },
-    creditMax: { // 最大信用额度
+    creditMax: {
+      // 最大信用额度
       type: DataTypes.FLOAT,
       defaultValue: 1000.0,
     },
@@ -44,31 +52,4 @@ module.exports = (sequelize) => {
   };
 
   return User;
-};
-
-const UserGameSettings = sequelize.define(
-  "UserGameSettings",
-  {
-    game_type: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    settings: {
-      type: DataTypes.JSON,
-      allowNull: false,
-    },
-  },
-  {
-    indexes: [
-      {
-        unique: true,
-        fields: ["userId", "game_type"],
-      },
-    ],
-  }
-);
-
-// 关联User
-UserGameSettings.associate = (models) => {
-  UserGameSettings.belongsTo(models.User, { foreignKey: "userId", as: "user" });
 };

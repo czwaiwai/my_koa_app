@@ -36,58 +36,22 @@ router.post("/userGameSettings/bulk", async (ctx) => {
     ctx.body = { error: err.message || "Failed to create user game settings" };
   }
 });
+// 获取本人的设置
+router.get("/userGameSettinags", async (ctx) => {
+  const userId = ctx.state.user.id;
+  const settings = await UserGameSettings.findAll({
+    where: { userId },
+    attributes: ["game_type", "settings"],
+  });
+  ctx.body = { success: true, settings };
+});
 
 // 退出（前端只需删除本地token即可，这里提供一个接口用于兼容）
 router.post("/logout", async (ctx) => {
-  ctx.body = { message: "Logout success (just remove token on client)" };
-});
-
-// 获取用户信息（需要token验证）
-router.get("/profile", async (ctx) => {
-  const authHeader = ctx.headers.authorization;
-  if (!authHeader || !authHeader.startsWith("Bearer ")) {
-    ctx.status = 401;
-    ctx.body = { error: "Authorization header missing or malformed" };
-    return;
-  }
-
-  const token = authHeader.split(" ")[1];
-  try {
-    const decoded = jwt.verify(token, SECRET);
-    const user = await User.findByPk(decoded.id, {
-      attributes: ["id", "username", "createdAt", "updatedAt"], // 返回需要的字段
-    });
-    if (!user) {
-      ctx.status = 404;
-      ctx.body = { error: "User not found" };
-      return;
-    }
-    ctx.body = { success: true, user };
-  } catch (err) {
-    ctx.status = 401;
-    ctx.body = { error: "Invalid or expired token" };
-  }
-});
-
-// 一次性添加多条userGameSettings数据
-router.post("/userGameSettings/bulk", async (ctx) => {
-  const { userId, settings } = ctx.request.body;
-  if (!userId || !Array.isArray(settings) || settings.length === 0) {
-    ctx.status = 400;
-    ctx.body = { error: "userId and non-empty settings array required" };
-    return;
-  }
-  try {
-    // 给每条设置添加userId字段
-    const dataToCreate = settings.map((item) => ({ ...item, userId }));
-    const created = await UserGameSettings.bulkCreate(dataToCreate, {
-      validate: true,
-    });
-    ctx.body = { success: true, createdCount: created.length };
-  } catch (err) {
-    ctx.status = 400;
-    ctx.body = { error: err.message || "Failed to create user game settings" };
-  }
+  ctx.body = {
+    success: true,
+    message: "Logout success (just remove token on client)",
+  };
 });
 
 module.exports = router;

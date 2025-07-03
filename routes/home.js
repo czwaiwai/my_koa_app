@@ -25,8 +25,10 @@ router.post("/register", async (ctx) => {
 
 // 登录
 router.post("/login", async (ctx) => {
-  const { username, password } = ctx.request.body;
-  const user = await User.findOne({ where: { username } });
+  const { userName, username, password } = ctx.request.body;
+  const user = await User.findOne({
+    where: { username: userName || username },
+  });
   if (!user) {
     ctx.status = 401;
     ctx.body = { error: "Invalid username or password" };
@@ -42,9 +44,13 @@ router.post("/login", async (ctx) => {
     expiresIn: "1h",
   });
   // refreshToken 有效期更长
-  const refreshToken = jwt.sign({ id: user.id, username: user.username }, SECRET, {
-    expiresIn: "7d",
-  });
+  const refreshToken = jwt.sign(
+    { id: user.id, username: user.username },
+    SECRET,
+    {
+      expiresIn: "7d",
+    }
+  );
   // 设置 httpOnly cookie
   ctx.cookies.set("refreshToken", refreshToken, {
     httpOnly: true,
@@ -52,7 +58,20 @@ router.post("/login", async (ctx) => {
     maxAge: 7 * 24 * 60 * 60 * 1000, // 7 天
     sameSite: "lax",
   });
-  ctx.body = { success: true, token };
+  ctx.body = {
+    success: true,
+    token,
+    longToken: refreshToken,
+    accessToken: token,
+    ...{
+      id: user.id,
+      userName: user.username,
+      nickName: user.nickname,
+      balance: user.balance,
+      usedCredit: user.usedCredit,
+      creditMax: user.creditMax,
+    },
+  };
 });
 
 // 刷新token
@@ -67,9 +86,13 @@ router.post("/refreshToken", async (ctx) => {
   try {
     const payload = jwt.verify(refreshToken, SECRET);
     // 重新生成新的token
-    const token = jwt.sign({ id: payload.id, username: payload.username }, SECRET, {
-      expiresIn: "1h",
-    });
+    const token = jwt.sign(
+      { id: payload.id, username: payload.username },
+      SECRET,
+      {
+        expiresIn: "1h",
+      }
+    );
     ctx.body = { success: true, token };
   } catch (err) {
     ctx.status = 401;
@@ -86,7 +109,10 @@ router.post("/logout", async (ctx) => {
     maxAge: 0,
     sameSite: "lax",
   });
-  ctx.body = { message: "Logout success (refreshToken cookie cleared)" };
+  ctx.body = {
+    success: true,
+    message: "Logout success (refreshToken cookie cleared)",
+  };
 });
 
 module.exports = router;
