@@ -1,7 +1,9 @@
-module.exports = (sequelize, DataTypes) => {
+const { DataTypes } = require("sequelize");
+module.exports = (sequelize) => {
   const Order = sequelize.define("Order", {
     orderId: {
       type: DataTypes.UUID,
+      primaryKey: true,
       allowNull: false,
       unique: true,
       defaultValue: DataTypes.UUIDV4,
@@ -30,10 +32,6 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.DATE,
       allowNull: false,
       defaultValue: DataTypes.NOW,
-    },
-    userId: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
     },
   });
 

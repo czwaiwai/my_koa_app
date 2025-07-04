@@ -1,4 +1,5 @@
-module.exports = (sequelize, DataTypes) => {
+const { DataTypes } = require("sequelize");
+module.exports = (sequelize) => {
   const EventResult = sequelize.define("EventResult", {
     eventId: {
       type: DataTypes.INTEGER,
