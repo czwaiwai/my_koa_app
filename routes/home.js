@@ -18,6 +18,7 @@ router.post("/register", async (ctx) => {
     const user = await User.create({ username, password });
     ctx.body = { success: true, id: user.id, username: user.username };
   } catch (err) {
+    console.log(err)
     ctx.status = 400;
     ctx.body = { error: "Username already exists" };
   }
