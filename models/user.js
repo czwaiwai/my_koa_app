@@ -26,6 +26,12 @@ module.exports = (sequelize) => {
       type: DataTypes.FLOAT,
       defaultValue: 0.0,
     },
+    frozen: {
+      type: DataTypes.FLOAT,
+      allowNull: false,
+      defaultValue: 0,
+      comment: "冻结金额",
+    },
     usedCredit: {
       // 已使用信用
       type: DataTypes.FLOAT,
@@ -43,11 +49,20 @@ module.exports = (sequelize) => {
     user.password = await bcrypt.hash(user.password, 10);
   });
 
-  // 关联UserGameSettings
+  // 关联表
   User.associate = (models) => {
     User.hasMany(models.UserGameSettings, {
       foreignKey: "userId",
       as: "gameSettings",
+    });
+    User.hasMany(models.Order, {
+      foreignKey: "userId",
+      as: "orders",
+    });
+    User.hasOne(models.UserTree, {
+      foreignKey: "userId",
+      as: "userTree",
+      onDelete: "CASCADE", // 级联删除
     });
   };
 

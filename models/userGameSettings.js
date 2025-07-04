@@ -24,10 +24,6 @@ module.exports = (sequelize) => {
         type: DataTypes.DECIMAL(10, 2),
         allowNull: true,
       },
-      single_item_limit: {
-        type: DataTypes.DECIMAL(10, 2),
-        allowNull: true,
-      },
       rebate: {
         type: DataTypes.DECIMAL(5, 2),
         allowNull: true,
