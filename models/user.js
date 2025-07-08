@@ -55,15 +55,15 @@ module.exports = (sequelize) => {
       foreignKey: "userId",
       as: "gameSettings",
     });
-    User.hasMany(models.Order, {
-      foreignKey: "userId",
-      as: "orders",
-    });
-    User.hasOne(models.UserTree, {
-      foreignKey: "userId",
-      as: "userTree",
-      onDelete: "CASCADE", // 级联删除
-    });
+    // User.hasMany(models.Order, {
+    //   foreignKey: "userId",
+    //   as: "orders",
+    // });
+    // User.hasOne(models.UserTree, {
+    //   foreignKey: "userId",
+    //   as: "userTree",
+    //   onDelete: "CASCADE", // 级联删除
+    // });
   };
 
   return User;

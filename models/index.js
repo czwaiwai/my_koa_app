@@ -15,15 +15,14 @@ const sequelize = new Sequelize({
 });
 
 const User = UserModel(sequelize);
-const Order = OrderModel(sequelize);
 const UserGameSettings = UserGameSettingsModel(sequelize);
-const UserTree = UserTreeModel(sequelize);
-const Game = GameModel(sequelize);
-const EventResult = EventResultModel(sequelize);
-const PayoutResult = PayoutResultModel(sequelize);
-const Trade = TradeModel(sequelize);
-const Transaction = TransactionModel(sequelize);
-const UserGameSettings = UserGameSettingsModel(sequelize);
+// const Order = OrderModel(sequelize);
+// const UserTree = UserTreeModel(sequelize);
+// const Game = GameModel(sequelize);
+// const EventResult = EventResultModel(sequelize);
+// const PayoutResult = PayoutResultModel(sequelize);
+// const Trade = TradeModel(sequelize);
+// const Transaction = TransactionModel(sequelize);
 
 // 统一建立关联
 const models = { User, UserGameSettings };
