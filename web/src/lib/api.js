@@ -6,6 +6,9 @@ export const apiEnum = {
   token: '/refreshToken',
   profile: '/user/profile|get',
   userGameSettingSave: '/user/userGameSettings/bulk',
+  gameCreate: '/game/create',
+  gameResult: '/game/result',
+  gameList: '/game/list',
   tradeRecordBet: '/trade-record/bet',
   userSearch: '/user/search',
   userCreate: '/user/create',
@@ -122,8 +125,8 @@ for (const key in apiEnum) {
   if (Object.hasOwnProperty.call(apiEnum, key)) {
     const urlLike = apiEnum[key]
     let [url, method] = urlLike.split('|')
-    if(!method) {
-       method = /\/:(.*)$/.test(url) ? 'get' : 'post'
+    if (!method) {
+      method = /\/:(.*)$/.test(url) ? 'get' : 'post'
     }
     if (method === 'get') {
       api[key] = (data) => {

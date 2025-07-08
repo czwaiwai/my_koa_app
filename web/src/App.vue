@@ -1,5 +1,5 @@
 <script setup>
-import { computed} from 'vue'
+import { computed } from 'vue'
 import { RouterLink, RouterView, useRouter } from 'vue-router'
 import { useUserStore } from '@/stores/index.js'
 // import HelloWorld from './components/HelloWorld.vue'
@@ -22,6 +22,7 @@ const handleLogout = () => {
         <RouterLink to="/">首页</RouterLink>
         <RouterLink to="/about">关于</RouterLink>
         <template v-if="userStore.isLogin">
+          <RouterLink to="/game">游戏</RouterLink>
           <RouterLink to="/profile">{{ userInfo.userName }}</RouterLink>
           <a @click="handleLogout">退出</a>
         </template>

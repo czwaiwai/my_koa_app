@@ -1,8 +1,7 @@
 import axios from 'axios'
 import router from '@/router'
-import { Message } from '@arco-design/web-vue'
+// import { Message } from '@arco-design/web-vue'
 import { useUserStore } from '@/stores'
-
 
 // import api from '@/api/index.js'
 // 创建axios实例
@@ -58,8 +57,8 @@ request.interceptors.response.use(
     return response.data
   },
   (error) => {
-    if(error.status === 401) {
-      if(error.response.config.isRetry) {
+    if (error.status === 401) {
+      if (error.response.config.isRetry) {
         return Promise.reject(error)
       }
       return getNewToken().then((res) => {

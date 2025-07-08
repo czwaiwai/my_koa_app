@@ -58,18 +58,20 @@ module.exports = (sequelize) => {
       },
     },
     {
-      tableName: "tree_nodes",
       timestamps: true,
       paranoid: true,
       indexes: [
         {
           fields: ["parentId"],
+          name: "tree_node_parent_id_index",
         },
         {
           fields: ["path"],
+          name: "tree_node_path_index",
         },
         {
           fields: ["type"],
+          name: "tree_node_type_index",
         },
       ],
     }
