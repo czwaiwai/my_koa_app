@@ -23,16 +23,17 @@ const EventResult = EventResultModel(sequelize);
 const PayoutResult = PayoutResultModel(sequelize);
 const Trade = TradeModel(sequelize);
 const Transaction = TransactionModel(sequelize);
+const UserGameSettings = UserGameSettingsModel(sequelize);
+
+// 统一建立关联
+const models = { User, UserGameSettings };
+Object.values(models).forEach((model) => {
+  if (typeof model.associate === "function") {
+    model.associate(models);
+  }
+});
 
 module.exports = {
   sequelize,
-  User,
-  Order,
-  UserGameSettings,
-  UserTree,
-  Game,
-  EventResult,
-  PayoutResult,
-  Trade,
-  Transaction,
+  ...models,
 };

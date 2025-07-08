@@ -64,7 +64,7 @@ router.post("/login", async (ctx) => {
     token,
     longToken: refreshToken,
     accessToken: token,
-    ...{
+    userInfo: {
       id: user.id,
       userName: user.username,
       nickName: user.nickname,

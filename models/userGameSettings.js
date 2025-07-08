@@ -1,43 +1,56 @@
 const { DataTypes } = require("sequelize");
-
+const _ = require("lodash");
+const GameType = _.range(1, 10);
 module.exports = (sequelize) => {
   const UserGameSettings = sequelize.define(
     "UserGameSettings",
     {
-      game_type: {
-        type: DataTypes.STRING,
+      gameType: {
+        type: DataTypes.ENUM(GameType),
         allowNull: false,
+        comment: "游戏类型",
       },
       category: {
         type: DataTypes.STRING,
         allowNull: true,
+        comment: "分类",
       },
-      min_bet: {
+      minBet: {
         type: DataTypes.DECIMAL(10, 2),
         allowNull: true,
+        comment: "最小投注额",
       },
-      odds_limit: {
+      oddsLimit: {
         type: DataTypes.DECIMAL(10, 2),
         allowNull: true,
+        comment: "赔率上限",
       },
-      single_bet_limit: {
+      singleBetLimit: {
         type: DataTypes.DECIMAL(10, 2),
         allowNull: true,
+        comment: "单注限额",
+      },
+      singleItemLimit: {
+        type: DataTypes.DECIMAL(10, 2),
+        allowNull: true,
+        comment: "单项限额",
       },
       rebate: {
         type: DataTypes.DECIMAL(5, 2),
         allowNull: true,
+        comment: "返利",
       },
       odds: {
         type: DataTypes.DECIMAL(10, 2),
         allowNull: true,
+        comment: "赔率",
       },
     },
     {
       indexes: [
         {
           unique: true,
-          fields: ["userId", "game_type"],
+          fields: ["userId", "gameType"],
         },
       ],
     }

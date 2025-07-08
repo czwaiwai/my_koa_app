@@ -1,5 +1,6 @@
 const Router = require("koa-router");
-const { User, UserGameSettings } = require("../models");
+const { sequelize, User, UserGameSettings } = require("../models");
+const transaction = require("../models/transaction");
 
 const router = new Router();
 
@@ -7,6 +8,7 @@ const router = new Router();
 router.get("/profile", async (ctx) => {
   const user = await User.findByPk(ctx.state.user.id, {
     attributes: ["id", "username", "createdAt", "updatedAt"],
+    include: [{ model: UserGameSettings, as: "gameSettings" }],
   });
   if (!user) {
     ctx.status = 404;
@@ -15,6 +17,8 @@ router.get("/profile", async (ctx) => {
   }
   ctx.body = { success: true, user };
 });
+
+router.post("/profileUpdate", async (ctx) => {});
 
 // 一次性添加多条userGameSettings数据
 router.post("/userGameSettings/bulk", async (ctx) => {
@@ -25,12 +29,19 @@ router.post("/userGameSettings/bulk", async (ctx) => {
     return;
   }
   try {
-    // 给每条设置添加userId字段
-    const dataToCreate = settings.map((item) => ({ ...item, userId }));
-    const created = await UserGameSettings.bulkCreate(dataToCreate, {
-      validate: true,
+    await sequelize.transaction(async (t) => {
+      await UserGameSettings.destroy({
+        where: { userId },
+        transaction: t,
+      });
+      // 给每条设置添加userId字段
+      const dataToCreate = settings.map((item) => ({ ...item, userId }));
+      const created = await UserGameSettings.bulkCreate(dataToCreate, {
+        validate: true,
+        transaction: t,
+      });
+      ctx.body = { success: true, createdCount: created.length };
     });
-    ctx.body = { success: true, createdCount: created.length };
   } catch (err) {
     ctx.status = 400;
     ctx.body = { error: err.message || "Failed to create user game settings" };
@@ -41,7 +52,7 @@ router.get("/userGameSettinags", async (ctx) => {
   const userId = ctx.state.user.id;
   const settings = await UserGameSettings.findAll({
     where: { userId },
-    attributes: ["game_type", "settings"],
+    attributes: ["gameType", "settings"],
   });
   ctx.body = { success: true, settings };
 });
